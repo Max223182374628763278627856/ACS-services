@@ -10,11 +10,11 @@ export default function HUD() {
         style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '12px 24px',
-          background: 'rgba(255,255,255,0.85)',
+          background: 'rgba(2,6,23,0.75)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255,255,255,0.9)',
-          boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          boxShadow: '0 4px 32px rgba(0,0,0,0.5)',
           pointerEvents: 'all',
         }}
       >
@@ -36,7 +36,7 @@ export default function HUD() {
               </span>
             ))}
           </div>
-          <span style={{ color: '#334155', fontWeight: 600, fontSize: 14 }}>
+          <span style={{ color: 'rgba(226,232,240,0.85)', fontWeight: 500, fontSize: 14, letterSpacing: '0.03em' }}>
             La Maison de la Sérénité
           </span>
         </div>
@@ -67,13 +67,13 @@ export default function HUD() {
           pointerEvents: 'none',
         }}
       >
-        <span style={{ fontSize: 12, color: 'rgba(100,116,139,0.8)', letterSpacing: '0.05em' }}>
-          Scrollez pour avancer dans la maison
+        <span style={{ fontSize: 11, color: 'rgba(148,163,184,0.6)', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+          Scrollez pour entrer
         </span>
         <motion.div
           animate={{ y: [0, 6, 0] }}
           transition={{ repeat: Infinity, duration: 1.4, ease: 'easeInOut' }}
-          style={{ fontSize: 18, opacity: 0.6 }}
+          style={{ fontSize: 16, opacity: 0.45, color: '#38bdf8' }}
         >
           ↓
         </motion.div>

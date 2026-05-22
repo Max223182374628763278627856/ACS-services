@@ -1,58 +1,73 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, Suspense } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { ScrollControls, useScroll, Environment, ContactShadows } from '@react-three/drei'
-import { EffectComposer, Bloom, Noise, DepthOfField } from '@react-three/postprocessing'
-import { BlendFunction } from 'postprocessing'
+import { EffectComposer, Bloom, Noise, DepthOfField, Vignette } from '@react-three/postprocessing'
+import { BlendFunction, KernelSize } from 'postprocessing'
 import { AnimatePresence } from 'framer-motion'
 import * as THREE from 'three'
 import gsap from 'gsap'
 
-import Entrance    from './Entrance'
+import Facade       from './Facade'
+import Entrance     from './Entrance'
 import LivingRoomV2 from './LivingRoomV2'
-import GardenView  from './GardenView'
-import Office      from './Office'
-import HUD         from './HUD'
-import InfoPanel   from './InfoPanel'
-import ServicePage from './ServicePage'
+import GardenView   from './GardenView'
+import Office       from './Office'
+import HUD          from './HUD'
+import InfoPanel    from './InfoPanel'
+import ServicePage  from './ServicePage'
+import Loader       from './Loader'
+import StoryText    from './StoryText'
+import CustomCursor from './CustomCursor'
+import scrollStore  from './scrollStore'
 
 /* ══════════════════════════════════════════
-   CAMERA TRAJECTORY
-   Two CatmullRom splines sampled at t=scroll.offset
+   CAMERA TRAJECTORY  (pages=5)
+   t=0 : outside facing facade
+   t=0.15 : stepping through the door
+   t=0.25 : entrance interior
+   t=0.45 : living room
+   t=0.65 : garden view
+   t=0.85 : office
+   t=1.00 : end
    ══════════════════════════════════════════ */
 const CAM_CURVE = new THREE.CatmullRomCurve3([
-  new THREE.Vector3( 0.00, 1.65,  7.0),  // 0 — just outside
-  new THREE.Vector3( 0.08, 1.65,  1.2),  // 0.14 — entrance
-  new THREE.Vector3( 0.00, 1.65, -4.0),  // 0.28 — E→L transition
-  new THREE.Vector3(-0.18, 1.65, -8.0),  // 0.42 — living room
-  new THREE.Vector3( 0.00, 1.65,-12.0),  // 0.56 — L→G transition
-  new THREE.Vector3( 0.28, 1.65,-16.0),  // 0.70 — garden
-  new THREE.Vector3( 0.10, 1.65,-20.0),  // 0.84 — G→O transition
-  new THREE.Vector3( 0.00, 1.65,-24.0),  // 0.92 — office
-  new THREE.Vector3( 0.00, 1.65,-26.0),  // 1.00 — end
+  new THREE.Vector3( 0.00, 1.65, 14.0),  // outside — facing facade
+  new THREE.Vector3( 0.00, 1.65,  9.5),  // approaching front door
+  new THREE.Vector3( 0.00, 1.65,  5.8),  // just before the door
+  new THREE.Vector3( 0.08, 1.65,  1.2),  // through the door — entrance
+  new THREE.Vector3( 0.00, 1.65, -4.0),  // E→L transition
+  new THREE.Vector3(-0.18, 1.65, -8.0),  // living room
+  new THREE.Vector3( 0.00, 1.65,-12.0),  // L→G transition
+  new THREE.Vector3( 0.28, 1.65,-16.0),  // garden
+  new THREE.Vector3( 0.10, 1.65,-20.0),  // G→O transition
+  new THREE.Vector3( 0.00, 1.65,-24.0),  // office
+  new THREE.Vector3( 0.00, 1.65,-26.0),  // end
 ])
-CAM_CURVE.tension = 0.45
+CAM_CURVE.tension = 0.42
 
-/* LookAt spline — same t, independent from position */
+/* LookAt spline — the "head turning" */
 const LOOK_CURVE = new THREE.CatmullRomCurve3([
-  new THREE.Vector3( 0.00, 1.40,  4.0),   // entrance: ahead at door
-  new THREE.Vector3( 1.15, 1.52,  0.0),   // entrance: frame right wall
-  new THREE.Vector3(-0.35, 1.30, -5.5),   // turning left
-  new THREE.Vector3(-1.50, 1.08, -7.5),   // living: elderly person
-  new THREE.Vector3( 0.50, 1.30,-13.0),   // turning right
+  new THREE.Vector3( 0.00, 1.55,  8.0),   // outside: looking at facade/door
+  new THREE.Vector3( 0.00, 1.52,  4.5),   // approaching: looking at door handle
+  new THREE.Vector3( 0.00, 1.48,  2.0),   // entering: straight ahead
+  new THREE.Vector3( 1.15, 1.52,  0.0),   // entrance: glance right at frame
+  new THREE.Vector3(-0.35, 1.30, -5.5),   // turning left toward living
+  new THREE.Vector3(-1.50, 1.08, -7.5),   // living: looking at elderly person
+  new THREE.Vector3( 0.50, 1.30,-13.0),   // turning right toward garden
   new THREE.Vector3( 2.80, 1.50,-16.5),   // garden: bay window
-  new THREE.Vector3( 0.50, 1.30,-21.0),   // turning back
-  new THREE.Vector3( 0.30, 0.85,-24.2),   // office: desk
+  new THREE.Vector3( 0.50, 1.30,-21.0),   // turning back to center
+  new THREE.Vector3( 0.30, 0.85,-24.2),   // office: desk/laptop
   new THREE.Vector3( 0.30, 0.85,-24.2),   // end
 ])
-LOOK_CURVE.tension = 0.45
+LOOK_CURVE.tension = 0.42
 
 /* ══════════════════════════════════════════
-   HOUSE STRUCTURE
+   HOUSE STRUCTURE — dark cinematic palette
    ══════════════════════════════════════════ */
-const FLOOR_C = '#A08040'
-const CEIL_C  = '#ECE8DC'
-const WALL_C  = '#EAE5D8'
-const TRIM_C  = '#5C3A1E'
+const FLOOR_C = '#1A1208'   // near-black with warm tint — MeshPhysicalMaterial set below
+const CEIL_C  = '#0D1220'   // very dark navy ceiling
+const WALL_C  = '#0F1826'   // deep navy wall
+const TRIM_C  = '#2A1A08'   // dark wood trim
 const ROOM_W  = 6
 const ROOM_H  = 3
 
@@ -63,15 +78,15 @@ function RoomDivider({ z }) {
     <group position={[0, 0, z]}>
       <mesh position={[-(dW / 2 + side / 2), ROOM_H / 2, 0]}>
         <boxGeometry args={[side, ROOM_H, 0.1]} />
-        <meshStandardMaterial color={WALL_C} roughness={0.88} />
+        <meshStandardMaterial color={WALL_C} roughness={0.92} />
       </mesh>
       <mesh position={[(dW / 2 + side / 2), ROOM_H / 2, 0]}>
         <boxGeometry args={[side, ROOM_H, 0.1]} />
-        <meshStandardMaterial color={WALL_C} roughness={0.88} />
+        <meshStandardMaterial color={WALL_C} roughness={0.92} />
       </mesh>
       <mesh position={[0, dH + (ROOM_H - dH) / 2, 0]}>
         <boxGeometry args={[dW, ROOM_H - dH, 0.1]} />
-        <meshStandardMaterial color={WALL_C} roughness={0.88} />
+        <meshStandardMaterial color={WALL_C} roughness={0.92} />
       </mesh>
       {/* Arch trim */}
       <mesh position={[0, dH + 0.048, 0]}>
@@ -94,52 +109,59 @@ function HouseStructure() {
 
   return (
     <group>
-      {/* Polished parquet — low roughness for subtle reflection */}
+      {/* Dark reflective parquet — MeshPhysicalMaterial */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.001, mid]}>
         <planeGeometry args={[ROOM_W, halfLen * 2]} />
-        <meshStandardMaterial color={FLOOR_C} roughness={0.16} metalness={0.05} />
+        <meshPhysicalMaterial
+          color="#120D06"
+          roughness={0.1}
+          metalness={0.8}
+          reflectivity={1}
+          clearcoat={1}
+          clearcoatRoughness={0.08}
+        />
       </mesh>
-      {/* Plank joints */}
+      {/* Subtle plank joints — barely visible in dark */}
       {Array.from({ length: 5 }).map((_, i) => (
-        <mesh key={i} rotation={[-Math.PI / 2, 0, 0]} position={[-2.4 + i * 1.2, 0.0012, mid]}>
-          <planeGeometry args={[0.028, halfLen * 2]} />
-          <meshStandardMaterial color="#6B4820" roughness={0.22} />
+        <mesh key={i} rotation={[-Math.PI / 2, 0, 0]} position={[-2.4 + i * 1.2, 0.0015, mid]}>
+          <planeGeometry args={[0.02, halfLen * 2]} />
+          <meshStandardMaterial color="#0A0806" roughness={0.15} />
         </mesh>
       ))}
 
-      {/* Ceiling — mat plaster */}
+      {/* Ceiling */}
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, ROOM_H, mid]}>
         <planeGeometry args={[ROOM_W, halfLen * 2]} />
-        <meshStandardMaterial color={CEIL_C} roughness={0.94} />
+        <meshStandardMaterial color={CEIL_C} roughness={0.96} />
       </mesh>
 
       {/* Left wall */}
       <mesh position={[-ROOM_W / 2, ROOM_H / 2, mid]}>
         <boxGeometry args={[0.07, ROOM_H, halfLen * 2]} />
-        <meshStandardMaterial color={WALL_C} roughness={0.88} />
+        <meshStandardMaterial color={WALL_C} roughness={0.92} />
       </mesh>
 
       {/* Right wall — two segments (gap z -13 to -19 for garden window) */}
       <mesh position={[ROOM_W / 2, ROOM_H / 2, -2.0]}>
         <boxGeometry args={[0.07, ROOM_H, 16]} />
-        <meshStandardMaterial color={WALL_C} roughness={0.88} />
+        <meshStandardMaterial color={WALL_C} roughness={0.92} />
       </mesh>
       <mesh position={[ROOM_W / 2, ROOM_H / 2, -23.5]}>
         <boxGeometry args={[0.07, ROOM_H, 9]} />
-        <meshStandardMaterial color={WALL_C} roughness={0.88} />
+        <meshStandardMaterial color={WALL_C} roughness={0.92} />
       </mesh>
 
       {/* Back wall */}
       <mesh position={[0, ROOM_H / 2, -28.0]}>
         <boxGeometry args={[ROOM_W, ROOM_H, 0.1]} />
-        <meshStandardMaterial color={WALL_C} roughness={0.88} />
+        <meshStandardMaterial color={WALL_C} roughness={0.92} />
       </mesh>
 
-      {/* Plinthes (baseboards) — both sides */}
+      {/* Baseboards */}
       {[-ROOM_W / 2 + 0.034, ROOM_W / 2 - 0.034].map((x, i) => (
         <mesh key={i} position={[x, 0.075, mid]}>
           <boxGeometry args={[0.068, 0.15, halfLen * 2]} />
-          <meshStandardMaterial color={TRIM_C} roughness={0.52} />
+          <meshStandardMaterial color={TRIM_C} roughness={0.52} metalness={0.1} />
         </mesh>
       ))}
 
@@ -148,19 +170,18 @@ function HouseStructure() {
       <RoomDivider z={-12} />
       <RoomDivider z={-20} />
 
-      {/* Global floor shadow */}
+      {/* Floor shadow — subtle on dark floor */}
       <ContactShadows
         position={[0, 0.002, mid]} width={ROOM_W} height={halfLen * 2}
-        far={2.2} resolution={256} color="#1A0800" opacity={0.25} blur={2.5}
+        far={2.2} resolution={256} color="#000000" opacity={0.6} blur={2.8}
       />
     </group>
   )
 }
 
 /* ══════════════════════════════════════════
-   CAMERA RIG — trajectory + zoom
+   CAMERA RIG
    ══════════════════════════════════════════ */
-/* Pre-allocated to avoid GC pressure every frame */
 const _camTarget  = new THREE.Vector3(0, 1.65, 7)
 const _lookTarget = new THREE.Vector3(0, 1.4, 4)
 const _camPt      = new THREE.Vector3()
@@ -203,8 +224,10 @@ function CameraRig({ zoomState, onSimpleSelect, onZoom }) {
   }, [zoomState])
 
   useFrame((state) => {
+    /* Update shared scroll store for HTML components */
+    scrollStore.offset = scroll.offset
+
     if (!isZoomed.current && !isAnimating.current) {
-      /* ── Scroll-driven trajectory ── */
       const t = Math.max(0, Math.min(1, scroll.offset))
       CAM_CURVE.getPoint(t, _camPt)
       LOOK_CURVE.getPoint(t, _lookPt)
@@ -212,10 +235,7 @@ function CameraRig({ zoomState, onSimpleSelect, onZoom }) {
       _lookTarget.lerp(_lookPt, 0.045)
     }
 
-    /* Apply position */
     state.camera.position.copy(_camTarget)
-
-    /* Apply lookAt via quaternion slerp — NO snapping */
     _mat4.lookAt(_camTarget, _lookTarget, _up)
     _quat.setFromRotationMatrix(_mat4)
     state.camera.quaternion.slerp(_quat, 0.07)
@@ -223,20 +243,31 @@ function CameraRig({ zoomState, onSimpleSelect, onZoom }) {
 
   return (
     <>
-      {/* Ambient — warm base */}
-      <ambientLight intensity={0.22} color="#FFF5E0" />
+      {/* Ambient — cool, low, cinematic */}
+      <ambientLight intensity={0.08} color="#1E2A4A" />
 
-      {/* Entry spot */}
+      {/* Sun — warm through windows */}
+      <directionalLight position={[4, 10, 18]} intensity={2.2} color="#FFD9A0" />
+
+      {/* Interior warm fill */}
+      <directionalLight position={[6, 4, -15]} intensity={1.4} color="#FFE0B0" />
+
+      {/* Entry spot — warm cone */}
       <spotLight
         position={[0.5, 2.9, 2.5]} target-position={[0, 0, 0]}
-        angle={0.5} penumbra={0.7} intensity={35} color="#FFD880"
+        angle={0.5} penumbra={0.7} intensity={18} color="#FFD880"
       />
 
-      {/* Sun from garden window — warm directional */}
-      <directionalLight
-        position={[6, 4, -15]} intensity={2.8} color="#FFF8DC"
-      />
+      {/* Living room warm fill */}
+      <pointLight position={[0, 2.5, -8]} intensity={8} color="#FF9040" distance={6} decay={2} />
 
+      {/* Garden backlight */}
+      <pointLight position={[3, 2, -16]} intensity={12} color="#A0D8FF" distance={8} decay={2} />
+
+      {/* Office desk lamp */}
+      <pointLight position={[0.5, 1.2, -24]} intensity={10} color="#FFE8B0" distance={4} decay={2} />
+
+      <Facade />
       <HouseStructure />
       <Entrance    onSelect={onSimpleSelect} />
       <LivingRoomV2 onZoom={onZoom} />
@@ -247,7 +278,7 @@ function CameraRig({ zoomState, onSimpleSelect, onZoom }) {
 }
 
 /* ══════════════════════════════════════════
-   POST FX
+   POST FX — cinematic grade
    ══════════════════════════════════════════ */
 function PostFX({ isZoomed }) {
   return (
@@ -257,10 +288,14 @@ function PostFX({ isZoomed }) {
         : <></>
       }
       <Bloom
-        intensity={0.20} luminanceThreshold={0.70}
-        luminanceSmoothing={0.90} blendFunction={BlendFunction.ADD}
+        intensity={1.5}
+        luminanceThreshold={0.55}
+        luminanceSmoothing={0.85}
+        kernelSize={KernelSize.LARGE}
+        blendFunction={BlendFunction.ADD}
       />
-      <Noise opacity={0.024} blendFunction={BlendFunction.SOFT_LIGHT} />
+      <Noise opacity={0.032} blendFunction={BlendFunction.SOFT_LIGHT} />
+      <Vignette eskil={false} offset={0.3} darkness={0.85} blendFunction={BlendFunction.NORMAL} />
     </EffectComposer>
   )
 }
@@ -289,8 +324,10 @@ export default function HouseScene() {
   const isZoomed = zoomState !== null
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative', background: '#020617', cursor: 'none' }}>
+      <CustomCursor />
       <HUD />
+      <StoryText />
 
       {/* Full-screen service page */}
       <AnimatePresence>
@@ -299,7 +336,7 @@ export default function HouseScene() {
         )}
       </AnimatePresence>
 
-      {/* Simple info panel for entrance / small objects */}
+      {/* Simple info panel */}
       <AnimatePresence>
         {simplePanel && !isZoomed && (
           <InfoPanel serviceId={simplePanel} onClose={() => setSimplePanel(null)} />
@@ -307,19 +344,26 @@ export default function HouseScene() {
       </AnimatePresence>
 
       <Canvas
-        camera={{ position: [0, 1.65, 7], fov: 64 }}
+        camera={{ position: [0, 1.65, 14], fov: 64 }}
         style={{ width: '100%', height: '100%' }}
-        gl={{ antialias: true, powerPreference: 'high-performance' }}
+        gl={{ antialias: true, powerPreference: 'high-performance', toneMappingExposure: 0.7 }}
+        onCreated={({ gl }) => { gl.toneMapping = 4 /* ACESFilmic */ }}
       >
-        <Environment preset="apartment" />
+        {/* Deep navy sky */}
+        <color attach="background" args={['#020617']} />
+        <fog attach="fog" args={['#020617', 22, 48]} />
 
-        <ScrollControls pages={4} damping={0.09} distance={1} enabled={!isZoomed}>
-          <CameraRig
-            zoomState={zoomState}
-            onSimpleSelect={setSimplePanel}
-            onZoom={handleZoom}
-          />
-        </ScrollControls>
+        <Environment preset="night" />
+
+        <Suspense fallback={null}>
+          <ScrollControls pages={5} damping={0.09} distance={1} enabled={!isZoomed}>
+            <CameraRig
+              zoomState={zoomState}
+              onSimpleSelect={setSimplePanel}
+              onZoom={handleZoom}
+            />
+          </ScrollControls>
+        </Suspense>
 
         <PostFX isZoomed={isZoomed} />
       </Canvas>

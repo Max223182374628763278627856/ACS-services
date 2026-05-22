@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react'
-import { AnimatePresence } from 'framer-motion'
+import { useState, useEffect, Suspense } from 'react'
 import HouseScene from './components/house/HouseScene'
-import ServiceModal from './components/ServiceModal'
-import MobileGrid from './components/MobileGrid'
-import Footer from './components/Footer'
+import MobileView from './components/house/MobileView'
+import Loader from './components/house/Loader'
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
@@ -17,25 +15,16 @@ function useIsMobile() {
 
 export default function App() {
   const isMobile = useIsMobile()
-  const [selectedService, setSelectedService] = useState(null)
 
   if (isMobile) {
-    return (
-      <div className="relative w-full h-full overflow-hidden" style={{ background: '#f8fafc' }}>
-        <MobileGrid onSelect={setSelectedService} />
-        <AnimatePresence>
-          {selectedService && (
-            <ServiceModal service={selectedService} onClose={() => setSelectedService(null)} />
-          )}
-        </AnimatePresence>
-        <Footer />
-      </div>
-    )
+    return <MobileView />
   }
 
   return (
-    <div style={{ width: '100%', height: '100%', overflow: 'hidden', background: '#1a0f00' }}>
-      <HouseScene />
+    <div style={{ width: '100%', height: '100%', overflow: 'hidden', background: '#020617' }}>
+      <Suspense fallback={<Loader />}>
+        <HouseScene />
+      </Suspense>
     </div>
   )
 }
