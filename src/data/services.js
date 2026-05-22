@@ -2,10 +2,11 @@ export const SERVICES = [
   {
     id: 'autonomie',
     label: 'Pôle Autonomie\n& Maison',
-    color: '#005596',
-    accent: '#82C341',
+    color: '#38bdf8',
+    dark:  '#0284c7',
+    light: '#e0f2fe',
     icon: '🏠',
-    position: [-2.2, 0, -1.5],
+    position: [-2.2, 0, -1.2],
     title: 'Pôle Autonomie & Maison',
     subtitle: 'Auxiliaire de vie · Ménage · Jardinage · Bricolage',
     description:
@@ -20,10 +21,11 @@ export const SERVICES = [
   {
     id: 'recrutement',
     label: 'Pôle\nRecrutement',
-    color: '#82C341',
-    accent: '#005596',
+    color: '#4ade80',
+    dark:  '#16a34a',
+    light: '#dcfce7',
     icon: '💼',
-    position: [2.2, 0, -1.5],
+    position: [2.2, 0, -1.2],
     title: 'Pôle Recrutement',
     subtitle: 'Intérim · CDD · CDI · Placement',
     description:
@@ -38,10 +40,11 @@ export const SERVICES = [
   {
     id: 'accompagnement',
     label: 'Pôle\nAccompagnement',
-    color: '#005596',
-    accent: '#82C341',
+    color: '#fb923c',
+    dark:  '#ea580c',
+    light: '#ffedd5',
     icon: '🚗',
-    position: [-2.2, 0, 1.5],
+    position: [-2.2, 0, 1.2],
     title: 'Pôle Accompagnement',
     subtitle: 'Transport · Mobilité · Démarches',
     description:
@@ -56,10 +59,11 @@ export const SERVICES = [
   {
     id: 'administratif',
     label: 'Pôle\nAdministratif',
-    color: '#82C341',
-    accent: '#005596',
+    color: '#a78bfa',
+    dark:  '#7c3aed',
+    light: '#ede9fe',
     icon: '💻',
-    position: [2.2, 0, 1.5],
+    position: [2.2, 0, 1.2],
     title: 'Pôle Administratif',
     subtitle: 'Gestion · Conseil · Démarches',
     description:

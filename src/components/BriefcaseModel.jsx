@@ -1,58 +1,41 @@
-import { useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { RoundedBox } from '@react-three/drei'
 
-export default function BriefcaseModel({ color = '#82C341', hovered = false }) {
-  const groupRef = useRef()
-
-  useFrame((state) => {
-    if (!groupRef.current) return
-    const t = state.clock.elapsedTime
-    groupRef.current.position.y = Math.sin(t * 1.4 + 1) * 0.06
-    const scale = hovered ? 1.12 : 1
-    groupRef.current.scale.lerp({ x: scale, y: scale, z: scale }, 0.1)
-  })
-
-  const bodyColor = hovered ? '#ffffff' : color
-  const handleColor = hovered ? '#82C341' : '#005596'
+export default function BriefcaseModel({ color = '#4ade80', dark = '#16a34a', hovered = false }) {
+  const c = hovered ? '#ffffff' : color
+  const d = hovered ? color : dark
 
   return (
-    <group ref={groupRef}>
+    <group>
       {/* Main body */}
-      <mesh position={[0, 0, 0]} castShadow>
-        <boxGeometry args={[0.85, 0.58, 0.3]} />
-        <meshStandardMaterial color={bodyColor} roughness={0.25} metalness={0.15} />
+      <RoundedBox args={[0.88, 0.62, 0.32]} radius={0.08} smoothness={4} position={[0, 0, 0]} castShadow>
+        <meshStandardMaterial color={c} roughness={0.3} metalness={0.2} />
+      </RoundedBox>
+
+      {/* Centre divider strip */}
+      <RoundedBox args={[0.9, 0.04, 0.34]} radius={0.02} smoothness={4} position={[0, 0.02, 0]}>
+        <meshStandardMaterial color={d} roughness={0.2} metalness={0.3} />
+      </RoundedBox>
+
+      {/* Handle — torus arc */}
+      <mesh position={[0, 0.4, 0]} rotation={[0, 0, 0]}>
+        <torusGeometry args={[0.19, 0.035, 8, 20, Math.PI]} />
+        <meshStandardMaterial color={d} roughness={0.2} metalness={0.4} />
       </mesh>
 
-      {/* Handle */}
-      <mesh position={[0, 0.38, 0]} castShadow>
-        <torusGeometry args={[0.18, 0.04, 8, 16, Math.PI]} />
-        <meshStandardMaterial color={handleColor} roughness={0.2} metalness={0.4} />
-      </mesh>
+      {/* Handle base left */}
+      <RoundedBox args={[0.06, 0.08, 0.06]} radius={0.02} smoothness={4} position={[-0.19, 0.31, 0]}>
+        <meshStandardMaterial color={d} roughness={0.2} metalness={0.4} />
+      </RoundedBox>
 
-      {/* Clasp left */}
-      <mesh position={[-0.18, 0.01, 0.17]}>
-        <boxGeometry args={[0.08, 0.08, 0.04]} />
-        <meshStandardMaterial color={handleColor} roughness={0.1} metalness={0.6} />
-      </mesh>
+      {/* Handle base right */}
+      <RoundedBox args={[0.06, 0.08, 0.06]} radius={0.02} smoothness={4} position={[0.19, 0.31, 0]}>
+        <meshStandardMaterial color={d} roughness={0.2} metalness={0.4} />
+      </RoundedBox>
 
-      {/* Clasp right */}
-      <mesh position={[0.18, 0.01, 0.17]}>
-        <boxGeometry args={[0.08, 0.08, 0.04]} />
-        <meshStandardMaterial color={handleColor} roughness={0.1} metalness={0.6} />
-      </mesh>
-
-      {/* Center divider line */}
-      <mesh position={[0, 0, 0.155]}>
-        <boxGeometry args={[0.86, 0.01, 0.01]} />
-        <meshStandardMaterial color={handleColor} />
-      </mesh>
-
-      {hovered && (
-        <mesh position={[0, 0, 0]}>
-          <boxGeometry args={[0.88, 0.61, 0.33]} />
-          <meshStandardMaterial color="#82C341" transparent opacity={0.08} emissive="#82C341" emissiveIntensity={0.6} />
-        </mesh>
-      )}
+      {/* Clasp center */}
+      <RoundedBox args={[0.12, 0.07, 0.05]} radius={0.02} smoothness={4} position={[0, 0.02, 0.18]}>
+        <meshStandardMaterial color={d} roughness={0.1} metalness={0.6} />
+      </RoundedBox>
     </group>
   )
 }
