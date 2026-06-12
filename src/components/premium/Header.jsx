@@ -1,72 +1,96 @@
 import { useEffect, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 
-export default function Header() {
-  const [scrolled, setScrolled] = useState(false)
-  const { scrollY } = useScroll()
-  const headerBg = useTransform(scrollY, [0, 60], ['rgba(255,255,255,0)', 'rgba(255,255,255,0.92)'])
-  const headerBorder = useTransform(scrollY, [0, 60], ['rgba(0,0,0,0)', 'rgba(0,0,0,0.07)'])
+const NAV = ['Services', 'Engagement', 'Recrutement', 'Contact']
 
-  useEffect(() => {
-    return scrollY.on('change', v => setScrolled(v > 20))
-  }, [scrollY])
+export default function Header() {
+  const { scrollY } = useScroll()
+  const [past, setPast] = useState(false)
+
+  useEffect(() => scrollY.on('change', v => setPast(v > 40)), [scrollY])
+
+  const py     = useTransform(scrollY, [0, 80], [20, 10])
+  const blur   = useTransform(scrollY, [0, 80], [0, 18])
+  const bgAlpha= useTransform(scrollY, [0, 80], [0, 0.88])
 
   return (
     <motion.header
-      style={{ backgroundColor: headerBg, borderBottomColor: headerBorder }}
-      className="fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-xl"
+      style={{ paddingTop: py, paddingBottom: py }}
+      className="fixed top-0 left-0 right-0 z-50 px-8"
     >
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      {/* glassmorphism layer */}
+      <motion.div
+        className="absolute inset-0"
+        style={{
+          backdropFilter: useTransform(blur, v => `blur(${v}px)`),
+          WebkitBackdropFilter: useTransform(blur, v => `blur(${v}px)`),
+          backgroundColor: useTransform(bgAlpha, v => `rgba(250,250,250,${v})`),
+          borderBottom: past ? '1px solid rgba(0,0,0,0.06)' : 'none',
+        }}
+      />
+
+      <div className="relative max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <motion.a
           href="#"
-          initial={{ opacity: 0, x: -16 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="flex items-center gap-2.5 no-underline"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          className="flex items-center gap-3 no-underline"
         >
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)' }}>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M8 2C5.8 2 4 3.8 4 6c0 1.4.7 2.6 1.8 3.3L5 13h6l-.8-3.7C11.3 8.6 12 7.4 12 6c0-2.2-1.8-4-4-4z" fill="white" fillOpacity="0.9"/>
+          <div style={{
+            width: 36, height: 36, borderRadius: 10,
+            background: 'linear-gradient(135deg, #0ea5e9, #22c55e)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M9 2.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM4 14c0-1.5 2.2-2.5 5-2.5s5 1 5 2.5" stroke="white" strokeWidth="1.6" strokeLinecap="round"/>
             </svg>
           </div>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 600, fontSize: '1.05rem', color: '#0f172a', letterSpacing: '-0.01em' }}>
+          <span style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontWeight: 600, fontSize: '1.1rem', color: '#111',
+            letterSpacing: '-0.01em',
+          }}>
             ACS <span style={{ color: '#0ea5e9' }}>Services</span>
           </span>
         </motion.a>
 
-        {/* Nav liens subtils */}
+        {/* Nav */}
         <motion.nav
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="hidden md:flex items-center gap-8"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="hidden md:flex items-center gap-10"
         >
-          {['Services', 'Engagement', 'Recrutement', 'Contact'].map(item => (
-            <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className="text-sm font-medium transition-colors duration-200"
-              style={{ color: '#64748b', textDecoration: 'none' }}
-              onMouseEnter={e => e.target.style.color = '#0f172a'}
-              onMouseLeave={e => e.target.style.color = '#64748b'}
+          {NAV.map(item => (
+            <a key={item} href={`#${item.toLowerCase()}`}
+              style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.82rem',
+                fontWeight: 500, color: '#6b7280', textDecoration: 'none',
+                letterSpacing: '0.03em', textTransform: 'uppercase', transition: 'color 0.2s' }}
+              onMouseEnter={e => e.target.style.color = '#111'}
+              onMouseLeave={e => e.target.style.color = '#6b7280'}
             >
               {item}
             </a>
           ))}
         </motion.nav>
 
-        {/* CTA pill */}
+        {/* CTA */}
         <motion.a
           href="#contact"
-          initial={{ opacity: 0, x: 16 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          whileHover={{ scale: 1.03 }}
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          whileHover={{ scale: 1.03, boxShadow: '0 8px 28px rgba(14,165,233,0.28)' }}
           whileTap={{ scale: 0.97 }}
-          className="inline-flex items-center gap-2 text-sm font-medium text-white no-underline px-5 py-2.5 rounded-full"
-          style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)', boxShadow: '0 4px 24px rgba(14,165,233,0.3)' }}
+          className="no-underline"
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '10px 22px', borderRadius: 999,
+            background: '#111', color: '#fff',
+            fontFamily: "'Inter', sans-serif", fontSize: '0.82rem',
+            fontWeight: 500, letterSpacing: '0.02em',
+            boxShadow: '0 2px 12px rgba(0,0,0,0.14)',
+            transition: 'box-shadow 0.2s',
+          }}
         >
           Demander un devis
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">

@@ -1,154 +1,177 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { SERVICES } from '../../data/services'
 
-const BENTO = [
+const CARDS = [
   {
-    id: 'autonomie',
-    span: 'col-span-2 row-span-2',
-    bg: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
-    accent: '#0ea5e9',
-    accentLight: '#e0f2fe',
-    emoji: '🏠',
+    size: 'large',  // col-span-2 row-span-2
+    color: '#0ea5e9',
+    bg: '#f0f9ff',
+    icon: (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M16 4C10.5 4 6 8.5 6 14c0 3.5 1.8 6.6 4.5 8.4L9 28h14l-1.5-5.6C24.2 20.6 26 17.5 26 14c0-5.5-4.5-10-10-10z" fill="#bae6fd" stroke="#0ea5e9" strokeWidth="1.5" strokeLinejoin="round"/>
+        <circle cx="16" cy="14" r="3" fill="#0ea5e9" opacity="0.6"/>
+      </svg>
+    ),
     title: 'Maintien à domicile',
-    subtitle: 'Auxiliaire de vie · Ménage · Jardinage · Bricolage',
-    featured: true,
+    subtitle: 'Seniors & Autonomie',
+    desc: 'Auxiliaire de vie, aide à la toilette, repas, courses, sorties — vos proches restent chez eux en toute sécurité.',
+    tags: ['Auxiliaire de vie', 'Ménage', 'Jardinage', 'Bricolage'],
+    cta: true,
   },
   {
-    id: 'recrutement',
-    span: 'col-span-1 row-span-1',
-    bg: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
-    accent: '#22c55e',
-    accentLight: '#dcfce7',
-    emoji: '💼',
+    size: 'small',
+    color: '#22c55e',
+    bg: '#f0fdf4',
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect x="4" y="8" width="20" height="16" rx="3" fill="#bbf7d0" stroke="#22c55e" strokeWidth="1.5"/>
+        <path d="M9 8V6a5 5 0 0 1 10 0v2" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round"/>
+        <circle cx="14" cy="16" r="2.5" fill="#22c55e"/>
+      </svg>
+    ),
     title: 'Recrutement',
     subtitle: 'Intérim · CDD · CDI',
+    desc: 'Placement de personnel qualifié dans les métiers du service à la personne.',
   },
   {
-    id: 'accompagnement',
-    span: 'col-span-1 row-span-1',
-    bg: 'linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%)',
-    accent: '#f97316',
-    accentLight: '#fed7aa',
-    emoji: '🚗',
+    size: 'small',
+    color: '#f97316',
+    bg: '#fff7ed',
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <circle cx="14" cy="14" r="10" fill="#fed7aa" stroke="#f97316" strokeWidth="1.5"/>
+        <path d="M14 9v5l3.5 3.5" stroke="#f97316" strokeWidth="1.8" strokeLinecap="round"/>
+      </svg>
+    ),
     title: 'Accompagnement',
     subtitle: 'Transport · Démarches',
+    desc: 'Rendez-vous médicaux, courses, sorties culturelles — nous assurons la mobilité.',
   },
   {
-    id: 'administratif',
-    span: 'col-span-2 row-span-1',
-    bg: 'linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%)',
-    accent: '#8b5cf6',
-    accentLight: '#ede9fe',
-    emoji: '📋',
+    size: 'wide',  // col-span-3 row-span-1
+    color: '#8b5cf6',
+    bg: '#faf5ff',
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect x="4" y="6" width="20" height="16" rx="3" fill="#ede9fe" stroke="#8b5cf6" strokeWidth="1.5"/>
+        <path d="M9 11h10M9 15h6" stroke="#8b5cf6" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    ),
     title: 'Pôle Administratif',
-    subtitle: 'APA · MDPH · Conseil · Suivi de vos dossiers d\'aides',
-    wide: true,
+    subtitle: 'APA · MDPH · Conseil · Suivi',
+    desc: "Nous guidons vos démarches administratives : demande d'APA, dossiers MDPH, montage des dossiers d'aides.",
+    tags: ['APA', 'MDPH', 'Crédit d\'impôt', 'CESU'],
   },
 ]
 
-const AVANTAGES = [
-  { icon: '✓', text: 'Agréé Service à la Personne' },
-  { icon: '✓', text: 'Intervenants diplômés & formés' },
-  { icon: '✓', text: 'Crédit d\'impôt 50%' },
-  { icon: '✓', text: 'Continuité de service garantie' },
-]
-
-function BentoCard({ item, index }) {
+const FadeUp = ({ children, delay = 0, className = '', style = {} }) => {
   const ref = useRef()
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+  return (
+    <motion.div ref={ref}
+      initial={{ opacity: 0, y: 28 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={className} style={style}>
+      {children}
+    </motion.div>
+  )
+}
 
-  const service = SERVICES.find(s => s.id === item.id)
+function Card({ card, delay }) {
+  const isLarge = card.size === 'large'
+  const isWide  = card.size === 'wide'
+
+  const gridStyle = isLarge
+    ? { gridColumn: 'span 2', gridRow: 'span 2' }
+    : isWide
+    ? { gridColumn: 'span 3' }
+    : {}
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.65, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -4, transition: { duration: 0.25 } }}
-      className={`${item.span} relative rounded-3xl p-8 overflow-hidden cursor-pointer group`}
-      style={{ background: item.bg, border: '1px solid rgba(0,0,0,0.05)' }}
-    >
-      {/* Cercle décoratif de fond */}
-      <div
-        className="absolute -bottom-8 -right-8 w-32 h-32 rounded-full opacity-30 transition-all duration-500 group-hover:scale-150 group-hover:opacity-20"
-        style={{ background: item.accent }}
-        aria-hidden="true"
-      />
-
-      {/* Badge */}
-      <div
-        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium mb-4"
-        style={{ background: 'rgba(255,255,255,0.7)', color: item.accent, backdropFilter: 'blur(8px)' }}
-      >
-        <span>{item.emoji}</span>
-        <span style={{ color: item.accent }}>ACS Services</span>
-      </div>
-
-      <h3
-        className="font-semibold mb-2 relative z-10"
+    <FadeUp delay={delay} style={gridStyle}>
+      <motion.div
+        whileHover={{ y: -5, boxShadow: '0 20px 48px rgba(0,0,0,0.09)' }}
+        transition={{ duration: 0.25 }}
         style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: item.featured ? '1.6rem' : '1.15rem',
-          color: '#0f172a',
-          lineHeight: 1.2,
+          height: '100%', borderRadius: 28,
+          background: card.bg, padding: isLarge ? 40 : 28,
+          border: '1px solid rgba(0,0,0,0.05)',
+          boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
+          display: 'flex', flexDirection: 'column', gap: isLarge ? 16 : 12,
+          cursor: 'pointer', position: 'relative', overflow: 'hidden',
         }}
       >
-        {item.title}
-      </h3>
+        {/* cercle décoratif */}
+        <div style={{
+          position: 'absolute', bottom: -32, right: -32,
+          width: 100, height: 100, borderRadius: '50%',
+          background: card.color, opacity: 0.07,
+          transition: 'all 0.4s',
+        }} />
 
-      <p className="text-sm relative z-10" style={{ color: '#64748b', lineHeight: 1.6 }}>
-        {item.subtitle}
-      </p>
+        {/* icône */}
+        <div style={{
+          width: 52, height: 52, borderRadius: 14,
+          background: 'white', display: 'flex', alignItems: 'center',
+          justifyContent: 'center', boxShadow: '0 2px 12px rgba(0,0,0,0.07)',
+        }}>
+          {card.icon}
+        </div>
 
-      {item.featured && service && (
-        <ul className="mt-5 space-y-2 relative z-10">
-          {service.prestations.map(p => (
-            <li key={p} className="flex items-center gap-2 text-sm" style={{ color: '#475569' }}>
-              <span className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ background: item.accent, opacity: 0.85 }}>
-                <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-                  <path d="M1 4l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </span>
-              {p}
-            </li>
-          ))}
-        </ul>
-      )}
+        {/* texte */}
+        <div>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.68rem',
+            fontWeight: 600, color: card.color, letterSpacing: '0.12em',
+            textTransform: 'uppercase', marginBottom: 4 }}>
+            {card.subtitle}
+          </p>
+          <h3 style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontSize: isLarge ? '1.7rem' : '1.15rem', fontWeight: 700,
+            color: '#0d1117', lineHeight: 1.2, letterSpacing: '-0.02em',
+          }}>
+            {card.title}
+          </h3>
+        </div>
 
-      {item.featured && (
-        <motion.a
-          href="#contact"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-sm font-medium no-underline relative z-10"
-          style={{ background: item.accent, boxShadow: `0 4px 20px ${item.accent}40` }}
-        >
-          En savoir plus
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M2 7h10M7 2l5 5-5 5" stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
-          </svg>
-        </motion.a>
-      )}
+        <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.9rem',
+          fontWeight: 300, lineHeight: 1.7, color: '#6b7280',
+          maxWidth: isLarge ? 380 : '100%' }}>
+          {card.desc}
+        </p>
 
-      {/* Flèche hover pour les petites cartes */}
-      {!item.featured && (
-        <motion.div
-          initial={{ opacity: 0, x: -4 }}
-          whileHover={{ opacity: 1, x: 0 }}
-          className="absolute bottom-6 right-6"
-        >
-          <div className="w-8 h-8 rounded-full flex items-center justify-center"
-            style={{ background: item.accent }}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 7h10M7 2l5 5-5 5" stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
-            </svg>
+        {card.tags && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
+            {card.tags.map(t => (
+              <span key={t} style={{
+                padding: '4px 12px', borderRadius: 999,
+                background: 'white', border: `1px solid ${card.color}30`,
+                fontFamily: "'Inter', sans-serif", fontSize: '0.75rem',
+                fontWeight: 500, color: card.color,
+              }}>{t}</span>
+            ))}
           </div>
-        </motion.div>
-      )}
-    </motion.div>
+        )}
+
+        {card.cta && (
+          <motion.a href="#contact"
+            whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+            style={{
+              marginTop: 8, display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '12px 24px', borderRadius: 999, background: card.color,
+              color: 'white', textDecoration: 'none', alignSelf: 'flex-start',
+              fontFamily: "'Inter', sans-serif", fontSize: '0.82rem', fontWeight: 500,
+              boxShadow: `0 6px 20px ${card.color}35`,
+            }}>
+            En savoir plus
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+              <path d="M2 6.5h9M6.5 2l4.5 4.5-4.5 4.5" stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
+            </svg>
+          </motion.a>
+        )}
+      </motion.div>
+    </FadeUp>
   )
 }
 
@@ -157,60 +180,50 @@ export default function BentoGrid() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section id="services" className="py-32 px-6" style={{ background: '#fafafa' }}>
-      <div className="max-w-6xl mx-auto">
+    <section id="services" style={{ padding: '120px 0', background: '#fafafa' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 40px' }}>
 
-        {/* Header */}
-        <div ref={ref} className="max-w-xl mb-16">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.5 }}
-            className="text-xs font-medium tracking-widest uppercase mb-4"
-            style={{ color: '#0ea5e9' }}
-          >
-            Nos Services
-          </motion.p>
+        {/* Header section */}
+        <div ref={ref} style={{ marginBottom: 64, maxWidth: 560 }}>
+          <motion.div
+            initial={{ opacity: 0, x: -16 }} animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+            <span style={{ width: 28, height: 1, background: '#0ea5e9', display: 'block' }} />
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.7rem',
+              fontWeight: 600, color: '#0ea5e9', letterSpacing: '0.18em',
+              textTransform: 'uppercase' }}>Nos services</span>
+          </motion.div>
+
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.65, delay: 0.08 }}
-            style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', fontWeight: 600, color: '#0f172a', lineHeight: 1.2, letterSpacing: '-0.02em' }}
-          >
-            Tout ce dont vous avez besoin,<br />
-            <span style={{ color: '#94a3b8', fontWeight: 400 }}>sous un même toit.</span>
+            initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            style={{ fontFamily: "'Playfair Display', Georgia, serif",
+              fontSize: 'clamp(2rem, 3.5vw, 3rem)', fontWeight: 700,
+              color: '#0d1117', lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: 16 }}>
+            Tout ce dont vous avez besoin,{' '}
+            <em style={{ fontStyle: 'italic', color: '#9ca3af', fontWeight: 400 }}>sous un même toit.</em>
           </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, delay: 0.16 }}
+            style={{ fontFamily: "'Inter', sans-serif", fontSize: '1rem',
+              fontWeight: 300, lineHeight: 1.75, color: '#9ca3af' }}>
+            De la garde de seniors à la gestion administrative, nous couvrons l'ensemble
+            de vos besoins avec la même exigence de qualité.
+          </motion.p>
         </div>
 
-        {/* Bento */}
-        <div className="grid grid-cols-3 grid-rows-3 gap-5"
-          style={{ gridTemplateRows: 'auto auto auto' }}>
-          {BENTO.map((item, i) => (
-            <BentoCard key={item.id} item={item} index={i} />
+        {/* Bento grid 3 colonnes */}
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateRows: 'auto auto', gap: 20,
+        }}>
+          {CARDS.map((card, i) => (
+            <Card key={card.title} card={card} delay={i * 0.07} />
           ))}
         </div>
-
-        {/* Avantages strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.45 }}
-          className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4"
-        >
-          {AVANTAGES.map(({ icon, text }) => (
-            <div key={text}
-              className="flex items-center gap-3 px-5 py-3.5 rounded-2xl"
-              style={{ background: 'white', border: '1px solid rgba(0,0,0,0.06)' }}>
-              <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, #0ea5e9, #6366f1)' }}>
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                  <path d="M1 5l3 3 5-5" stroke="white" strokeWidth="1.6" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <span className="text-sm font-medium" style={{ color: '#374151' }}>{text}</span>
-            </div>
-          ))}
-        </motion.div>
 
       </div>
     </section>
