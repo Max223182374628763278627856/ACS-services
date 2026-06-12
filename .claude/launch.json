@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev", "--", "--port", "5173"],
       "port": 5173
+    },
+    {
+      "name": "acs-site-html",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "serve-site"],
+      "port": 3456
     }
   ]
 }
