@@ -9,12 +9,6 @@ const VALEURS = [
   { n: '03', title: 'Engagement',    desc: 'Nous construisons des relations durables — avec nos clients comme avec nos intervenants.', color: '#8b5cf6' },
 ]
 
-const POSTES = [
-  { icon: '🏠', title: 'Auxiliaire de vie',   type: 'CDI · Temps plein' },
-  { icon: '✨', title: 'Aide ménager(ère)',     type: 'CDI · Temps partiel' },
-  { icon: '🌿', title: 'Jardinier(ère)',        type: 'CDD · Saisonnier' },
-  { icon: '🚗', title: 'Accompagnateur(trice)', type: 'CDI · Flexible' },
-]
 
 const FadeUp = ({ children, delay = 0, style = {} }) => {
   const ref = useRef()
@@ -166,34 +160,6 @@ export default function Engagement() {
               Planning flexible, formations assurées, équipe bienveillante.
             </p>
           </FadeUp>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 52 }}>
-            {POSTES.map(({ icon, title, type }, i) => (
-              <FadeUp key={title} delay={i * 0.08}>
-                <motion.div whileHover={{ y: -5, boxShadow: '0 20px 48px rgba(0,0,0,0.08)' }}
-                  transition={{ duration: 0.22 }}
-                  style={{ padding: '32px 28px', borderRadius: 24, background: '#fafafa',
-                    border: '1px solid #f3f4f6', cursor: 'pointer',
-                    boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
-                  <div style={{ fontSize: '1.8rem', marginBottom: 18 }}>{icon}</div>
-                  <h4 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1rem',
-                    fontWeight: 700, color: '#0d1117', letterSpacing: '-0.015em', marginBottom: 5 }}>
-                    {title}
-                  </h4>
-                  <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.75rem',
-                    color: '#9ca3af', marginBottom: 18 }}>{type}</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6,
-                    fontFamily: "'Inter', sans-serif", fontSize: '0.73rem',
-                    fontWeight: 500, color: '#8b5cf6' }}>
-                    Voir le poste
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6h8M6 2l4 4-4 4" stroke="#8b5cf6" strokeWidth="1.3" strokeLinecap="round"/>
-                    </svg>
-                  </div>
-                </motion.div>
-              </FadeUp>
-            ))}
-          </div>
 
           {/* CTA bande sombre */}
           <FadeUp delay={0.3}>
