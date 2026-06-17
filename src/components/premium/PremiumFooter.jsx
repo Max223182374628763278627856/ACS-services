@@ -48,7 +48,7 @@ export default function PremiumFooter() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
               {[
-                { icon: '📞', label: '02 XX XX XX XX',       sub: 'Lun–Dim · 7h–21h' },
+                { icon: '📞', label: '07 64 45 07 78 · 06 18 35 42 75', sub: 'Lun–Dim · 7h–21h' },
                 { icon: '✉️', label: 'contact@acs-services.fr', sub: 'Réponse sous 24h' },
                 { icon: '📍', label: 'Nantes, Loire-Atlantique', sub: 'Et toute l\'agglomération' },
               ].map(({ icon, label, sub }, i) => (
