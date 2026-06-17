@@ -3,6 +3,7 @@ import Hero from './components/premium/Hero'
 import BentoGrid from './components/premium/BentoGrid'
 import Stats from './components/premium/Stats'
 import Engagement from './components/premium/Engagement'
+import Association from './components/premium/Association'
 import PremiumFooter from './components/premium/PremiumFooter'
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
         <Hero />
         <Stats />
         <BentoGrid />
+        <Association />
         <Engagement />
       </main>
       <PremiumFooter />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 
-const NAV = ['Services', 'Engagement', 'Recrutement', 'Contact']
+const NAV = ['Services', 'Association', 'Engagement', 'Recrutement', 'Contact']
 
 // Container partagé — même règle que le reste du site
 const C = { maxWidth: 1360, margin: '0 auto', padding: '0 80px' }
