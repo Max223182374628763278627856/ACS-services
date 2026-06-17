@@ -1,5 +1,8 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
+import photoRoger    from '../../assets/roger-ferrandez.jpg'
+import photoJocya    from '../../assets/jocya-almor.png'
+import photoIsabelle from '../../assets/isabelle-foure.png'
 
 const C = { maxWidth: 1360, margin: '0 auto', padding: '0 80px' }
 
@@ -17,13 +20,6 @@ const FadeUp = ({ children, delay = 0, style = {} }) => {
   )
 }
 
-// Remplacez ces imports par vos vraies photos :
-// import photoRoger from '../../assets/roger-ferrandez.jpg'
-// import photoJocya from '../../assets/jocya-almor.jpg'
-// import photoIsabelle from '../../assets/isabelle-foure.jpg'
-const photoRoger    = null
-const photoJocya    = null
-const photoIsabelle = null
 
 function Avatar({ photo, nom, initiales, color = '#0ea5e9', size = 160 }) {
   return (
