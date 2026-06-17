@@ -71,9 +71,9 @@ export default function Hero() {
           {/* Sous-titre */}
           <motion.p {...FADE(0.26)} style={{
             fontFamily: "'Inter', sans-serif",
-            fontSize: '1.1rem', fontWeight: 300,
+            fontSize: '1.1rem', fontWeight: 400,
             lineHeight: 1.9,               /* très aéré */
-            color: '#6b7280', maxWidth: 460, marginBottom: 52,
+            color: '#374151', maxWidth: 460, marginBottom: 52,
             letterSpacing: '0.005em',
           }}>
             Des intervenants qualifiés et bienveillants pour accompagner vos proches
@@ -99,10 +99,10 @@ export default function Hero() {
             <a href="#services"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 8,
                 textDecoration: 'none', fontFamily: "'Inter', sans-serif",
-                fontSize: '0.85rem', fontWeight: 400, color: '#9ca3af',
+                fontSize: '0.85rem', fontWeight: 400, color: '#4b5563',
                 transition: 'color 0.2s' }}
               onMouseEnter={e => e.currentTarget.style.color = '#111'}
-              onMouseLeave={e => e.currentTarget.style.color = '#9ca3af'}>
+              onMouseLeave={e => e.currentTarget.style.color = '#4b5563'}>
               Nos services
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
@@ -173,7 +173,7 @@ export default function Hero() {
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.78rem',
                 fontWeight: 600, color: '#111', lineHeight: 1 }}>Agréé SAP</div>
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.68rem',
-                color: '#9ca3af', marginTop: 3 }}>Service à la Personne</div>
+                color: '#4b5563', marginTop: 3 }}>Service à la Personne</div>
             </div>
           </motion.div>
 
@@ -191,7 +191,7 @@ export default function Hero() {
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.8rem',
                 fontWeight: 700, color: '#111' }}>4.9 / 5</div>
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.66rem',
-                color: '#9ca3af' }}>500+ avis clients</div>
+                color: '#4b5563' }}>500+ avis clients</div>
             </div>
           </motion.div>
         </motion.div>

@@ -59,7 +59,7 @@ export default function Stats() {
                   margin: '20px auto', borderRadius: 1, transformOrigin: 'left' }} />
 
               <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.8rem',
-                fontWeight: 400, color: '#9ca3af', lineHeight: 1.75,
+                fontWeight: 400, color: '#4b5563', lineHeight: 1.75,
                 whiteSpace: 'pre-line', letterSpacing: '0.01em' }}>
                 {label}
               </p>
@@ -88,7 +88,7 @@ export default function Stats() {
                 </svg>
               </div>
               <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.8rem',
-                fontWeight: 400, color: '#6b7280', letterSpacing: '0.01em' }}>{item}</span>
+                fontWeight: 400, color: '#374151', letterSpacing: '0.01em' }}>{item}</span>
             </div>
           ))}
         </motion.div>

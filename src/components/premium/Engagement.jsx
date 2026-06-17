@@ -51,13 +51,13 @@ export default function Engagement() {
                   fontSize: 'clamp(2.2rem, 3.5vw, 3.2rem)', fontWeight: 700,
                   color: '#0d1117', lineHeight: 1.08, letterSpacing: '-0.035em', marginBottom: 22 }}>
                 Des personnes<br />
-                <em style={{ fontStyle: 'italic', fontWeight: 400, color: '#9ca3af' }}>au service des personnes.</em>
+                <em style={{ fontStyle: 'italic', fontWeight: 400, color: '#4b5563' }}>au service des personnes.</em>
               </motion.h2>
 
               <motion.p initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.7, delay: 0.16 }}
-                style={{ fontFamily: "'Inter', sans-serif", fontSize: '1rem', fontWeight: 300,
-                  lineHeight: 1.9, color: '#9ca3af', maxWidth: 420, marginBottom: 56,
+                style={{ fontFamily: "'Inter', sans-serif", fontSize: '1rem', fontWeight: 400,
+                  lineHeight: 1.9, color: '#4b5563', maxWidth: 420, marginBottom: 56,
                   letterSpacing: '0.005em' }}>
                 La qualité d'une prestation repose avant tout sur la qualité humaine de ceux
                 qui l'assurent. C'est pourquoi nous recrutons, formons et fidélisons les meilleurs
@@ -80,7 +80,7 @@ export default function Engagement() {
                         {title}
                       </div>
                       <div style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.87rem',
-                        fontWeight: 300, lineHeight: 1.8, color: '#9ca3af' }}>{desc}</div>
+                        fontWeight: 400, lineHeight: 1.8, color: '#4b5563' }}>{desc}</div>
                     </div>
                   </motion.div>
                 ))}
@@ -127,7 +127,7 @@ export default function Engagement() {
                     <div style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.72rem',
                       fontWeight: 600, color: '#111' }}>Marie-Claire D.</div>
                     <div style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.65rem',
-                      color: '#9ca3af', marginTop: 1 }}>Fille aidante · ★★★★★</div>
+                      color: '#4b5563', marginTop: 1 }}>Fille aidante · ★★★★★</div>
                   </div>
                 </div>
               </motion.div>
@@ -152,10 +152,10 @@ export default function Engagement() {
               fontSize: 'clamp(2.2rem, 3.5vw, 3.2rem)', fontWeight: 700,
               color: '#0d1117', lineHeight: 1.08, letterSpacing: '-0.035em', marginBottom: 18 }}>
               Construisez votre carrière{' '}
-              <em style={{ fontStyle: 'italic', fontWeight: 400, color: '#9ca3af' }}>avec ACS.</em>
+              <em style={{ fontStyle: 'italic', fontWeight: 400, color: '#4b5563' }}>avec ACS.</em>
             </h2>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '1rem', fontWeight: 300,
-              lineHeight: 1.85, color: '#9ca3af' }}>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '1rem', fontWeight: 400,
+              lineHeight: 1.85, color: '#4b5563' }}>
               Nous recrutons des personnes passionnées par l'aide à autrui.
               Planning flexible, formations assurées, équipe bienveillante.
             </p>
@@ -177,7 +177,7 @@ export default function Engagement() {
                   letterSpacing: '-0.025em', lineHeight: 1.15 }}>
                   Votre profil nous intéresse.
                 </h3>
-                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.88rem', fontWeight: 300,
+                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.88rem', fontWeight: 400,
                   color: '#64748b', marginTop: 10, lineHeight: 1.7 }}>
                   Nous cherchons avant tout des personnes engagées et bienveillantes.
                 </p>

@@ -123,7 +123,7 @@ function Card({ card, delay }) {
         </div>
 
         <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.88rem',
-          fontWeight: 300, lineHeight: 1.8, color: '#6b7280',
+          fontWeight: 400, lineHeight: 1.8, color: '#374151',
           maxWidth: isLarge ? 360 : '100%' }}>
           {card.desc}
         </p>
@@ -184,13 +184,13 @@ export default function BentoGrid() {
               fontSize: 'clamp(2.2rem, 3.5vw, 3.2rem)', fontWeight: 700,
               color: '#0d1117', lineHeight: 1.08, letterSpacing: '-0.035em', marginBottom: 18 }}>
             Tout ce dont vous avez besoin,{' '}
-            <em style={{ fontStyle: 'italic', color: '#9ca3af', fontWeight: 400 }}>sous un même toit.</em>
+            <em style={{ fontStyle: 'italic', color: '#4b5563', fontWeight: 400 }}>sous un même toit.</em>
           </motion.h2>
 
           <motion.p initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.16 }}
             style={{ fontFamily: "'Inter', sans-serif", fontSize: '1rem',
-              fontWeight: 300, lineHeight: 1.85, color: '#9ca3af' }}>
+              fontWeight: 400, lineHeight: 1.85, color: '#4b5563' }}>
             De la garde de seniors à la gestion administrative, nous couvrons l'ensemble
             de vos besoins avec la même exigence de qualité.
           </motion.p>
