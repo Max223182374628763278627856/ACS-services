@@ -67,31 +67,6 @@ export default function Stats() {
           ))}
         </div>
 
-        {/* Avantages */}
-        <motion.div initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.5 }}
-          style={{ marginTop: 88, display: 'flex', gap: 40,
-            justifyContent: 'center', flexWrap: 'wrap' }}>
-          {[
-            'Agréé Service à la Personne',
-            'Intervenants diplômés & formés',
-            'Crédit d\'impôt 50 %',
-            'Continuité de service garantie',
-          ].map(item => (
-            <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 18, height: 18, borderRadius: '50%', flexShrink: 0,
-                background: 'linear-gradient(135deg, #0ea5e9, #22c55e)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
-                  <path d="M1.5 4.5l2 2 4-4" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.8rem',
-                fontWeight: 400, color: '#374151', letterSpacing: '0.01em' }}>{item}</span>
-            </div>
-          ))}
-        </motion.div>
 
       </div>
     </section>
