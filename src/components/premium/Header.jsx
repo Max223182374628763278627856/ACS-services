@@ -34,7 +34,7 @@ export default function Header() {
         <motion.a href="#" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
           style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}>
-          <div style={{ width: 38, height: 38, borderRadius: 11,
+          <div style={{ width: 46, height: 46, borderRadius: 13,
             background: 'linear-gradient(135deg, #0ea5e9, #22c55e)',
             display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
@@ -43,7 +43,7 @@ export default function Header() {
             </svg>
           </div>
           <span style={{ fontFamily: "'Playfair Display', Georgia, serif",
-            fontWeight: 600, fontSize: '1.1rem', color: '#111', letterSpacing: '-0.01em' }}>
+            fontWeight: 600, fontSize: '1.35rem', color: '#111', letterSpacing: '-0.01em' }}>
             ACS <span style={{ color: '#0ea5e9' }}>Services</span>
           </span>
         </motion.a>
@@ -55,7 +55,7 @@ export default function Header() {
           className="hidden md:flex">
           {NAV.map(item => (
             <a key={item} href={`#${item.toLowerCase()}`}
-              style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.75rem', fontWeight: 500,
+              style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.9rem', fontWeight: 500,
                 color: '#9ca3af', textDecoration: 'none', letterSpacing: '0.1em',
                 textTransform: 'uppercase', transition: 'color 0.2s' }}
               onMouseEnter={e => e.target.style.color = '#111'}
@@ -73,7 +73,7 @@ export default function Header() {
           style={{ display: 'inline-flex', alignItems: 'center', gap: 8,
             padding: '11px 24px', borderRadius: 999, background: '#111', color: '#fff',
             textDecoration: 'none', fontFamily: "'Inter', sans-serif",
-            fontSize: '0.78rem', fontWeight: 500, letterSpacing: '0.03em',
+            fontSize: '0.95rem', fontWeight: 500, letterSpacing: '0.03em',
             boxShadow: '0 2px 14px rgba(0,0,0,0.14)' }}>
           Demander un devis
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
