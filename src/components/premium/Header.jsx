@@ -57,7 +57,7 @@ export default function Header() {
         {/* Nav */}
         <motion.nav initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          style={{ display: 'flex', alignItems: 'center', gap: 40 }}
+          style={{ display: 'flex', alignItems: 'center', gap: 56 }}
           className="hidden md:flex">
           {NAV.map(({ label, path }) => {
             const active = location.pathname === path
