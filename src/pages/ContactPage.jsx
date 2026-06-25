@@ -3,6 +3,19 @@ import { motion, useInView } from 'framer-motion'
 
 const C = { maxWidth: 1360, margin: '0 auto', padding: '0 80px' }
 
+const inputStyle = {
+  width: '100%', padding: '13px 17px', borderRadius: 12,
+  border: '1.5px solid #f3f4f6', fontFamily: "'Inter', sans-serif",
+  fontSize: '0.95rem', color: '#0d1117', background: '#fafafa',
+  outline: 'none', transition: 'border-color 0.2s',
+}
+
+const labelStyle = {
+  fontFamily: "'Inter', sans-serif", fontSize: '0.75rem', fontWeight: 500,
+  color: '#4b5563', display: 'block', marginBottom: 8,
+  letterSpacing: '0.06em', textTransform: 'uppercase',
+}
+
 const FadeUp = ({ children, delay = 0, style = {} }) => {
   const ref = useRef()
   const inView = useInView(ref, { once: true, margin: '-40px' })
@@ -39,7 +52,7 @@ export default function ContactPage() {
               </h1>
               <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '1rem', fontWeight: 400,
                 lineHeight: 1.9, color: '#4b5563', marginBottom: 56, maxWidth: 380 }}>
-                Devis gratuit, sans engagement. Un conseiller vous rappelle sous 2h.
+                Un conseiller vous répond sous 24h. N'hésitez pas à nous écrire ou nous appeler directement.
               </p>
             </FadeUp>
 
@@ -74,69 +87,60 @@ export default function ContactPage() {
             <div style={{ background: 'white', borderRadius: 28, padding: 48,
               boxShadow: '0 8px 48px rgba(0,0,0,0.07)', border: '1px solid #f3f4f6' }}>
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.5rem',
-                fontWeight: 700, color: '#0d1117', marginBottom: 32, letterSpacing: '-0.02em' }}>
-                Devis en 3 étapes
+                fontWeight: 700, color: '#0d1117', marginBottom: 8, letterSpacing: '-0.02em' }}>
+                Envoyez-nous un message
               </h2>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.9rem', color: '#9ca3af',
+                marginBottom: 32 }}>Nous vous répondons dans les plus brefs délais.</p>
+
               <form onSubmit={e => e.preventDefault()}
                 style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                  {[['Prénom', 'text', 'Marie'], ['Téléphone', 'tel', '06 XX XX XX XX']].map(([label, type, ph]) => (
-                    <div key={label}>
-                      <label style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.75rem',
-                        fontWeight: 500, color: '#4b5563', display: 'block', marginBottom: 8,
-                        letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                        {label}
-                      </label>
-                      <input type={type} placeholder={ph}
-                        style={{ width: '100%', padding: '13px 17px', borderRadius: 12,
-                          border: '1.5px solid #f3f4f6', fontFamily: "'Inter', sans-serif",
-                          fontSize: '0.95rem', color: '#0d1117', background: '#fafafa',
-                          outline: 'none', transition: 'border-color 0.2s' }}
-                        onFocus={e => e.target.style.borderColor = '#0ea5e9'}
-                        onBlur={e => e.target.style.borderColor = '#f3f4f6'}
-                      />
-                    </div>
-                  ))}
+                  <div>
+                    <label style={labelStyle}>Prénom</label>
+                    <input type="text" placeholder="Marie" style={inputStyle}
+                      onFocus={e => e.target.style.borderColor = '#0ea5e9'}
+                      onBlur={e => e.target.style.borderColor = '#f3f4f6'} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Nom</label>
+                    <input type="text" placeholder="Dupont" style={inputStyle}
+                      onFocus={e => e.target.style.borderColor = '#0ea5e9'}
+                      onBlur={e => e.target.style.borderColor = '#f3f4f6'} />
+                  </div>
                 </div>
 
                 <div>
-                  <label style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.75rem',
-                    fontWeight: 500, color: '#4b5563', display: 'block', marginBottom: 8,
-                    letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                    Service souhaité
-                  </label>
-                  <select style={{ width: '100%', padding: '13px 17px', borderRadius: 12,
-                    border: '1.5px solid #f3f4f6', fontFamily: "'Inter', sans-serif",
-                    fontSize: '0.95rem', color: '#374151', background: '#fafafa',
-                    outline: 'none', cursor: 'pointer', appearance: 'none',
+                  <label style={labelStyle}>Téléphone</label>
+                  <input type="tel" placeholder="06 XX XX XX XX" style={inputStyle}
+                    onFocus={e => e.target.style.borderColor = '#0ea5e9'}
+                    onBlur={e => e.target.style.borderColor = '#f3f4f6'} />
+                </div>
+
+                <div>
+                  <label style={labelStyle}>Sujet</label>
+                  <select style={{ ...inputStyle, cursor: 'pointer', appearance: 'none',
                     backgroundImage: `url("data:image/svg+xml,%3Csvg width='11' height='7' viewBox='0 0 11 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23d1d5db' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E")`,
                     backgroundRepeat: 'no-repeat', backgroundPosition: 'right 17px center' }}
                     onFocus={e => e.target.style.borderColor = '#0ea5e9'}
                     onBlur={e => e.target.style.borderColor = '#f3f4f6'}>
-                    <option value="">Choisir un service…</option>
+                    <option value="">Choisir un sujet…</option>
+                    <option>Renseignement sur nos services</option>
                     <option>Maintien à domicile senior</option>
                     <option>Ménage & repassage</option>
                     <option>Jardinage</option>
-                    <option>Petit bricolage</option>
                     <option>Accompagnement & transport</option>
+                    <option>Autre</option>
                   </select>
                 </div>
 
                 <div>
-                  <label style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.75rem',
-                    fontWeight: 500, color: '#4b5563', display: 'block', marginBottom: 8,
-                    letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                    Message (optionnel)
-                  </label>
-                  <textarea rows={3} placeholder="Décrivez votre situation…"
-                    style={{ width: '100%', padding: '13px 17px', borderRadius: 12,
-                      border: '1.5px solid #f3f4f6', fontFamily: "'Inter', sans-serif",
-                      fontSize: '0.95rem', color: '#0d1117', background: '#fafafa',
-                      outline: 'none', resize: 'none', transition: 'border-color 0.2s' }}
+                  <label style={labelStyle}>Message</label>
+                  <textarea rows={4} placeholder="Décrivez votre situation ou votre demande…"
+                    style={{ ...inputStyle, resize: 'none' }}
                     onFocus={e => e.target.style.borderColor = '#0ea5e9'}
-                    onBlur={e => e.target.style.borderColor = '#f3f4f6'}
-                  />
+                    onBlur={e => e.target.style.borderColor = '#f3f4f6'} />
                 </div>
 
                 <motion.button type="submit"
@@ -146,9 +150,8 @@ export default function ContactPage() {
                     background: '#0d1117', color: 'white', border: 'none',
                     fontFamily: "'Inter', sans-serif", fontSize: '0.95rem', fontWeight: 500,
                     cursor: 'pointer', display: 'flex', alignItems: 'center',
-                    justifyContent: 'center', gap: 9,
-                    boxShadow: '0 4px 18px rgba(0,0,0,0.14)' }}>
-                  Envoyer ma demande
+                    justifyContent: 'center', gap: 9, boxShadow: '0 4px 18px rgba(0,0,0,0.14)' }}>
+                  Envoyer le message
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path d="M2 7h10M7 2l5 5-5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
@@ -156,6 +159,7 @@ export default function ContactPage() {
               </form>
             </div>
           </FadeUp>
+
         </div>
       </div>
     </section>
