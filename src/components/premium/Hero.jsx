@@ -42,7 +42,7 @@ export default function Hero() {
         gap: 80, alignItems: 'center' }}>
 
         {/* ——— TEXTE (≤ 52 % de la largeur) ——— */}
-        <motion.div style={{ y: textY, opacity }}>
+        <motion.div style={{ y: textY }}>
 
           {/* Label */}
           <motion.div {...FADE(0.1)} style={{
