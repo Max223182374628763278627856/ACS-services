@@ -59,7 +59,7 @@ const CARDS = [
     title: 'Pôle Administratif',
     subtitle: 'APA · MDPH · Conseil · Suivi',
     desc: "Nous guidons vos démarches administratives : demande d'APA, dossiers MDPH, montage des dossiers d'aides.",
-    tags: ['APA', 'MDPH', 'Crédit d\'impôt', 'CESU'],
+    tags: ['APA', 'MDPH', 'Aide financière', 'CESU'],
   },
 ]
 
