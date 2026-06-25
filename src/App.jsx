@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import Header from './components/premium/Header'
 import Footer from './components/premium/Footer'
 import HomePage from './pages/HomePage'
@@ -10,7 +10,7 @@ import ContactPage from './pages/ContactPage'
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div style={{ width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Header />
         <main style={{ flex: 1 }}>
@@ -25,6 +25,6 @@ export default function App() {
         </main>
         <Footer />
       </div>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
